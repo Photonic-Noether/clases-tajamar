@@ -1,0 +1,2 @@
+class PasswordValidationError(Exception):
+    pass
