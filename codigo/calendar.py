@@ -19,5 +19,6 @@
 # Crear un Dominio (logica)
 
 # Manejar dependencias entre ellos!!
+# Schemas, Exceptions, dataclasses, ...
 
 # Testeo
