@@ -173,15 +173,138 @@ Y por supuesto, se estudian estos códigos con gatos: [https://http.cat/](https:
 
 ## Otras arquitecturas de API
 
+Además de REST, existen varios otros protocolos y estilos para diseñar APIs:
 
+* SOAP (Simple Object Access Protocol):
+    * Descripción: Es un protocolo basado en XML para intercambiar información estructurada en la implementación de servicios web.
+    * Características: Especifica reglas estrictas para la mensajería y puede ser utilizado con varios protocolos de red, como HTTP, SMTP y más.
+    * Ejemplo: Servicios web de algunas empresas financieras que requieren alta seguridad y transacciones complejas.
+
+* GraphQL:
+    * Descripción: Es un lenguaje de consulta para APIs que permite a los clientes solicitar exactamente los datos que necesitan.
+    * Características: Los clientes pueden especificar la forma exacta de la respuesta, lo que puede reducir el uso de ancho de banda y mejorar la eficiencia.
+    * Ejemplo: APIs de Facebook, GitHub y Shopify.
+
+* gRPC (gRPC Remote Procedure Call):
+    * Descripción: Es un marco de trabajo de RPC desarrollado por Google que utiliza Protocol Buffers (protobuf) como su lenguaje de definición de interfaz.
+    * Características: Ofrece comunicación eficiente y escalable entre servicios en diferentes lenguajes de programación.
+    * Ejemplo: Servicios internos de Google y otros microservicios modernos.
 
 ## Métodos auth
 
+Las APIs utilizan diferentes métodos de autenticación para garantizar que solo los usuarios autorizados puedan acceder a los recursos. Estos métodos permiten identificar a un usuario, de forma que pueda acceder a sus recursos.
 
+### API Key Authentication
 
-## Auth vs autor
+Se utiliza una clave API (API Key) para autenticar las solicitudes. La clave se incluye en la solicitud HTTP, generalmente en los encabezados o como un parámetro de consulta.
 
+```python
+import requests
 
+url = "https://api.ejemplo.com/endpoint"
+headers = {
+    "Authorization": "Bearer API_KEY"
+}
+
+response = requests.get(url, headers=headers)
+```
+
+Y en vez de mandarlo en headers se puede mandar como parametro de consulta (param)
+
+### Basic Authentication
+
+Se envían las credenciales (nombre de usuario y contraseña) en el encabezado de la solicitud HTTP, codificadas en base64.
+
+```python
+import requests
+from requests.auth import HTTPBasicAuth
+
+url = "https://api.ejemplo.com/endpoint"
+auth = HTTPBasicAuth(<usuario: str>, <contraseña: str>)
+
+response = requests.get(url, auth=auth)
+```
+
+### Bearer Token Authentication
+
+Se envía un token de acceso en el encabezado de autorización de la solicitud HTTP.
+
+```python
+import requests
+
+url = "https://api.ejemplo.com/endpoint"
+headers = {
+    "Authorization": "Bearer TOKEN"
+}
+
+response = requests.get(url, headers=headers)
+```
+
+### JWT (JSON Web Token)
+
+JWT se utiliza para compartir información de manera segura entre dos partes. Los tokens JWT son autodescriptivos y pueden contener información adicional en sus "claims".
+
+```python
+import jwt
+import datetime
+import requests
+
+secret_key = <SECRET_KEY: str>
+payload = {
+    "user_id": "123",
+    "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+}
+token = jwt.encode(payload, secret_key, algorithm="HS256")
+
+url = "https://api.ejemplo.com/endpoint"
+headers = {
+    "Authorization": f"Bearer {token}"
+}
+
+response = requests.get(url, headers=headers)
+```
+
+### Oauth 2.0
+
+OAuth 2.0 es un protocolo de autorización que permite a las aplicaciones obtener acceso limitado a los recursos del usuario en un servidor.
+
+```python
+import requests
+
+url = "https://auth.ejemplo.com/oauth/token"
+data = {
+    "grant_type": "client_credentials",
+    "client_id": <CLIENT_ID: str>,
+    "client_secret": <CLIENT_SECRET: str>
+}
+response = requests.post(url, data=data)
+token = response.json()["token"]
+
+url = "https://api.ejemplo.com/endpoint"
+headers = {
+    "Authorization": f"Bearer {access_token}"
+}
+
+response = requests.get(url, headers=headers)
+```
+
+### TLS (Auth mutuo)
+
+Utiliza certificados digitales para autenticar tanto al cliente como al servidor.
+
+```python
+import requests
+
+url = "https://api.ejemplo.com/endpoint"
+cert = (<path_cert_pem: str>, <path_key_pem: str>)
+
+response = requests.get(url, cert=cert)
+```
+
+## Autenticación VS autorización
+
+Autenticar a un usuario **no significa que ese usuario tenga todos los accesos**. A veces, tenemos un error 403, indicando que el usuario se ha autenticado correctamente, *pero no tiene permisos para acceder a ese recurso*.
 
 ## Cliente REST VS Servidor
 
+Un cliente REST es aquel que **consume** una API RESTful, mientas que un **servidor** es quien expone las APIs a los clientes.
