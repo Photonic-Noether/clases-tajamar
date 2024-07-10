@@ -2,18 +2,44 @@
 Un closure es una función anidada que recuerda los valores de las variables del
 entorno en el que fue creada, incluso después de que ese entorno haya terminado
 su ejecución. Es una característica de los lenguajes de programación que soportan
-funciones de primera clase, como Python.
+funciones de primera clase, como Python o Javascript.
 """
 
 def exterior(mensaje):
+    # Una forma
     def interior():
         print(mensaje)
+        
+    # Otra forma
+    interior = lambda: print(mensaje)
     return interior
 
 mi_closure = exterior("¡Hola, mundo!")
 mi_closure()
 
-# Hacer un closure calculadora con lambdas
+def calculadora(valor1: int, operacion: str, valor2: int):
+    if operacion == "+":
+        calculo = lambda: valor1 + valor2
+    elif operacion == "-":
+        calculo = lambda: valor1 - valor2
+    elif operacion == "*":
+        calculo = lambda: valor1 * valor2
+    elif operacion == "/":
+        try:
+            calculo = lambda: valor1 / valor2
+        except ZeroDivisionError:
+            print("No puedes dividir por 0")
+            calculo = None
+    else:
+        raise ValueError()
+    try:
+        print(f"{calculo() if calculo else "No hay resultado"}")
+    except Exception as e:
+        print(str(e))  # Solo por si hay otros errores raros
+    return calculo
+ 
+calc = calculadora(10, "/", 2)
+calc()
 
 """ 
 Un decorador es un closure que devuelve como return una funcion arbitraria, de
@@ -39,18 +65,19 @@ def suma(a, b):
 resultado = suma(3, 4)
 print(f"Resultado: {resultado}")
 
-""" @medir_tiempo
-def factorial(n):
-    if n < 0:
-        raise ValueError()
-    elif n == 0 or n == 1:
-        return 1
-    else:
-        return n * factorial(n - 1)
-    
-factorial(1000) """
+# Decorador de En proceso
+def process_decorator(func):
+    def wrapper(*args, **kwargs):
+        print("En proceso ...")
+        return func(*args, **kwargs)
+    return wrapper
 
-# Hacer un decorador de "Work in progress..."
+@process_decorator
+def suma(a, b):
+    time.sleep(2)
+    return a + b
+
+resultado = suma(3, 4)
 
 def decorador_con_args(arg1, arg2):
     def decorador(func):
@@ -65,4 +92,4 @@ def decorador_con_args(arg1, arg2):
 def funcion_ejemplo():
     print("Función ejecutada")
 
-#funcion_ejemplo()
+funcion_ejemplo()
