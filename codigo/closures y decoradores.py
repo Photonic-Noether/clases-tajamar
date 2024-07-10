@@ -16,8 +16,7 @@ mi_closure()
 # Hacer un closure calculadora con lambdas
 
 """ 
-Un decorador es un closure que devuelve
-como return una funcion arbitraria, de
+Un decorador es un closure que devuelve como return una funcion arbitraria, de
 forma que complementa (o decora) otra funcion
 """
 
