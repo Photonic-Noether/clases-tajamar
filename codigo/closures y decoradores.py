@@ -1,10 +1,7 @@
 """ 
-Un closure es una función anidada que
-recuerda los valores de las variables del
-entorno en el que fue creada, incluso
-después de que ese entorno haya terminado
-su ejecución. Es una característica de
-los lenguajes de programación que soportan
+Un closure es una función anidada que recuerda los valores de las variables del
+entorno en el que fue creada, incluso después de que ese entorno haya terminado
+su ejecución. Es una característica de los lenguajes de programación que soportan
 funciones de primera clase, como Python.
 """
 
